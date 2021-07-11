@@ -6,7 +6,7 @@ function calculateTotal(array $scores, int $limit) {
 }
 
 function isCheck(array $questions) {
-    $not_attempted = array('na', 'not attempted');
+    $not_attempted = array('na', 'not attempted', 'n/a', 'na0', 'no0t attempted', 'not attempted ', 'not attempted not attempted', 'not attempted0','not attempted8.5');
     for($x = 0; $x < count($questions) - 1; $x+=2) {
         $score = $questions[$x];
         $remarks = trim(strtolower($questions[$x + 1]));
