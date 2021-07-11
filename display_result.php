@@ -6,11 +6,11 @@ function displayResult(array $result) {
     <thead>
       <tr>
         <th scope="col" colspan="4"><?php echo $result[0][0]; ?></th>
-        <th scope="col" colspan="4"><?php echo $result[0][4]; ?></th>
-        <th scope="col" colspan="3"><?php echo $result[0][8]; ?></th>
+        <th scope="col" colspan="5"><?php echo $result[0][4]; ?></th>
+        <th scope="col" colspan="3"><?php echo $result[0][9]; ?></th>
         <?php
           $i = 0;
-          foreach(array_slice($result[0], 11) as $question) {
+          foreach(array_slice($result[0], 12) as $question) {
               if ($i % 2 == 0) { ?>
                   <th scope="col" colspan="2"><?php echo $question; ?></th>
         <?php } $i+=1; } ?>

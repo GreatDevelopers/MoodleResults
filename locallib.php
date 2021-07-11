@@ -19,8 +19,8 @@ function isCheck(array $questions) {
 
 function processResult(array $result, int $max_questions = 99999, string $paper_id = '') {
     $student_ids = array_unique(array_map(function($line) {return $line['student'];}, $result));
-    $header_row1 = array('Student', '', '', '', 'Grading Info', '', '', '', 'Paper', '', '');
-    $header_row2 = array('First name', 'Last name', 'username', 'Student ID', 'Check', 'Total Score', 'Graded by', 'Time graded', 'Paper Id', 'Assignment Id', 'Assignment Name');
+    $header_row1 = array('Student', '', '', '', 'Grading Info', '', '', '', '', 'Paper', '', '');
+    $header_row2 = array('First name', 'Last name', 'username', 'Student ID', 'Check', 'Total Score', 'Rounded Total Score', 'Graded by', 'Time graded', 'Paper Id', 'Assignment Id', 'Assignment Name');
     $students = array();
     foreach ($student_ids as $student_id) {
         $student = array();
@@ -50,7 +50,7 @@ function processResult(array $result, int $max_questions = 99999, string $paper_
         }
 	$check = isCheck($questions) ? 'True' : 'False';
         $total = calculateTotal($scores, $max_questions);
-        array_push($student, $check, $total, $graded_by, $time_graded, $paper_id, $assignment_id, $assignment_name);
+        array_push($student, $check, $total, intval($total), $graded_by, $time_graded, $paper_id, $assignment_id, $assignment_name);
         $student = array_merge($student, $questions);
         array_push($students, $student);
     }
