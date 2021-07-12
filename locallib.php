@@ -6,13 +6,13 @@ function calculateTotal(array $scores, int $limit) {
 }
 
 function isCheck(array $questions) {
-    $not_attempted = array('na', 'not attempted', 'n/a', 'na0', 'no0t attempted', 'not attempted ', 'not attempted not attempted', 'not attempted0','not attempted8.5');
+    $not_attempted_regex = '/^NA|^N\/A|^no[t ]*Attemp.*/i';
     for($x = 0; $x < count($questions) - 1; $x+=2) {
         $score = $questions[$x];
-        $remarks = trim(strtolower($questions[$x + 1]));
-	if ($score != 0 and in_array($remarks, $not_attempted)) {
+        $remarks = trim($questions[$x + 1]);
+        if ($score != 0 and preg_match($not_attempted_regex, $remarks)) {
             return true;
-	}
+        }
     }
     return false;
 }
@@ -50,7 +50,7 @@ function processResult(array $result, int $max_questions = 99999, string $paper_
         }
 	$check = isCheck($questions) ? 'True' : 'False';
         $total = calculateTotal($scores, $max_questions);
-        array_push($student, $check, $total, intval($total), $graded_by, $time_graded, $paper_id, $assignment_id, $assignment_name);
+        array_push($student, $check, $total, ceil($total), $graded_by, $time_graded, $paper_id, $assignment_id, $assignment_name);
         $student = array_merge($student, $questions);
         array_push($students, $student);
     }
@@ -61,12 +61,14 @@ function processResult(array $result, int $max_questions = 99999, string $paper_
 function processPaperResults(array $results, array $max_questions = array(99999), array $paper_ids = array('')) {
     $processedResults = array();
     $headers = array(array(), array());
-    foreach($results as $key => $result) {
-        $processedResult = processResult($result, ($key < count($max_questions)) ? $max_questions[$key] : $max_questions[count($max_questions) - 1], ($key < count($paper_ids)) ? $paper_ids[$key] : $paper_ids[count($paper_ids) - 1]);
+    $key = 0;
+    foreach($results as $paper_id => $result) {
+        $processedResult = processResult($result, ($key < count($max_questions)) ? $max_questions[$key] : $max_questions[count($max_questions) - 1], $paper_id);
         if (count($headers[0]) < count(array_slice($processedResult, 0, 2)[0])) {
             $headers = array_slice($processedResult, 0, 2);
         }
         $processedResults = array_merge($processedResults, array_slice($processedResult, 2));
+	$key += 1;
     }
     return array_merge($headers, $processedResults);
 }
